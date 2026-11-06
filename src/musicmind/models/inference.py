@@ -1,4 +1,4 @@
-﻿"""Model inference utilities for MusicMind AI."""
+"""Model inference utilities for MusicMind AI."""
 
 from __future__ import annotations
 
@@ -79,8 +79,17 @@ def predict_genre(
     predicted_index = int(np.argmax(votes))
     predicted_genre = config["classes"][predicted_index]
 
+    # Additive reporting fields: the decision rule above (majority voting) is
+    # unchanged; these expose the CNN's per-segment softmax outputs for display.
+    mean_probabilities = probabilities.mean(axis=0)
+
     return {
         "genre": predicted_genre,
+        "mean_probabilities": {
+            config["classes"][index]: float(value)
+            for index, value in enumerate(mean_probabilities)
+        },
+        "segment_probabilities": probabilities.astype(float).tolist(),
         "votes": int(votes[predicted_index]),
         "total_segments": expected_segments,
         "vote_ratio": float(votes[predicted_index] / expected_segments),

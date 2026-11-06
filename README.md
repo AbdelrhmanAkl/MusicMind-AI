@@ -62,7 +62,8 @@ This segment-based approach provides a track-level classification based on multi
 - **Majority Voting:** Aggregates segment predictions into a final classification.
 - **Interactive Streamlit Dashboard:** Provides an accessible interface for audio classification.
 - **Multiple Audio Formats:** Supports WAV, MP3, OGG, FLAC, and M4A, subject to decoder compatibility.
-- **Prediction Visualization:** Displays classification results and segment-level vote distribution.
+- **Prediction Visualization:** Displays the predicted genre, segment agreement, average softmax probability per genre, a per-segment probability timeline and ranked genres.
+- **Product-style Interface:** Dark violet UI with upload validation, audio playback, and sections for how it works, supported genres, held-out test metrics, model details and limitations.
 
 ## Supported Genres
 
@@ -239,6 +240,8 @@ MusicMind-AI/
 ├── app.py
 ├── requirements.txt
 ├── .gitignore
+├── .streamlit/config.toml
+├── tests/test_pipeline.py
 │
 ├── artifacts/
 │   ├── metadata/
@@ -261,10 +264,20 @@ MusicMind-AI/
     └── musicmind/
         ├── audio/
         │   ├── loader.py
-        │   └── preprocessing.py
+        │   ├── preprocessing.py
+        │   └── validation.py
         │
-        └── models/
-            └── inference.py
+        ├── models/
+        │   └── inference.py
+        │
+        ├── reports.py
+        │
+        └── ui/
+            ├── charts.py
+            ├── components.py
+            ├── constants.py
+            ├── sections.py
+            └── theme.py
 ```
 
 ## Installation

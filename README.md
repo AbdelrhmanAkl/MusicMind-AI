@@ -1,199 +1,215 @@
-<div align="center">
-
 # MusicMind AI
+### Deep Learning-Based Music Genre Classification
 
-**Deep Learning-Based Music Genre Classification**
+An end-to-end deep learning application that classifies music into 10 genres using a custom Convolutional Neural Network (CNN) trained on Mel Spectrograms.
 
-*Upload a track. Get its genre, with the evidence behind the prediction.*
+Upload an audio track, explore its predicted genre, and inspect the segment-level predictions behind the final result.
 
-[Live Demo](https://musicmind-ai.streamlit.app/) · [Notebook](notebooks/music_genre_classification.ipynb) · [Results](#results) · [Quick Start](#quick-start)
+**[Live Demo](https://musicmind-ai.streamlit.app/)** · **[Jupyter Notebook](notebooks/music_genre_classification.ipynb)** · **[Model Evaluation](#model-performance)**
 
-`Python 3.11` `TensorFlow 2.21` `Streamlit` `MIT License`
+`Python 3.11` `TensorFlow 2.21` `Keras` `Librosa` `Streamlit` `MIT License`
 
-</div>
+---
 
 ## Overview
 
-**MusicMind AI** is an end-to-end deep learning application that classifies music into **10 genres** using a custom **Convolutional Neural Network (CNN)** trained on **Mel Spectrograms**. It covers the full ML lifecycle: data cleaning, leakage-free splitting, feature extraction, model training, held-out evaluation, and deployment as an interactive **Streamlit** web app.
+MusicMind AI is an end-to-end music genre classification system built using deep learning and audio signal processing.
 
-Instead of judging a whole track from a single prediction, the system splits each recording into ten 3-second segments, classifies every segment independently, and combines the results through **majority voting** for a more robust track-level decision.
+The project uses a custom Convolutional Neural Network (CNN) to classify audio recordings into 10 music genres based on their Mel Spectrogram representations.
 
-### Highlights
+Rather than relying on a single prediction for an entire recording, MusicMind processes each track as 10 independent 3-second segments. The individual predictions are then aggregated using majority voting to produce a track-level classification.
 
-| | |
+The project covers the complete machine learning workflow, including:
+
+- Audio data cleaning and preprocessing.
+- Leakage-aware dataset splitting.
+- Mel Spectrogram feature extraction.
+- CNN model development and training.
+- Held-out test evaluation and error analysis.
+- Model serialization and deployment.
+- Interactive prediction dashboard development.
+
+## Key Highlights
+
+| Component | Description |
 |---|---|
-| **82.43%** test accuracy | on an untouched held-out set of 148 tracks |
-| **Leakage-aware** evaluation | track-level stratified split *before* segmentation |
-| **Custom CNN** | 3 conv blocks, Global Average Pooling, saved as a Keras `.keras` artifact |
-| **Segment-level voting** | 10 predictions per track, aggregated into one |
-| **Deployed** | interactive Streamlit dashboard with rich visualizations |
+| Test Accuracy | 82.43% on 148 unseen tracks |
+| Classification | 10 music genres |
+| Architecture | Custom 3-block CNN |
+| Audio Representation | 128-bin Mel Spectrograms |
+| Inference Strategy | 10 segments per track with majority voting |
+| Data Leakage Prevention | Track-level stratified splitting before segmentation |
+| Deployment | Interactive Streamlit application |
 
 ---
 
-## Table of Contents
+## Supported Music Genres
 
-- [Key Features](#key-features)
-- [How It Works](#how-it-works)
-- [Dataset](#dataset)
-- [Methodology](#methodology)
-- [Model Architecture](#model-architecture)
-- [Results](#results)
-- [Project Structure](#project-structure)
-- [Quick Start](#quick-start)
-- [Limitations](#limitations)
-- [Tech Stack](#tech-stack)
-- [Author](#author)
+The model recognizes the following 10 genres:
 
----
+1. Blues
+2. Classical
+3. Country
+4. Disco
+5. Hip-Hop
+6. Jazz
+7. Metal
+8. Pop
+9. Reggae
+10. Rock
 
-## Key Features
+## System Architecture
 
-- **10-genre classification:** Blues, Classical, Country, Disco, Hip-Hop, Jazz, Metal, Pop, Reggae, Rock.
-- **Segment-level inference + majority voting:** 10 independent predictions per track.
-- **Rich prediction dashboard:** predicted genre, segment agreement, average softmax probability per genre, per-segment probability timeline, and ranked genres.
-- **Multiple audio formats:** WAV, MP3, OGG, FLAC, and M4A (subject to decoder availability).
-- **Product-style UI:** dark violet theme, upload validation, audio playback, plus sections for how it works, supported genres, held-out test metrics, model details, and limitations.
-- **Reproducible artifacts:** model, config, split manifest, predictions, and evaluation reports are all versioned in the repo.
-
----
-
-## How It Works
+The inference pipeline transforms an uploaded audio recording into a final genre prediction through the following stages:
 
 ```mermaid
-flowchart LR
-    A[Audio Upload] --> B[Load and Validate]
-    B --> C[Mono + Resample<br/>22,050 Hz]
-    C --> D[Standardize to 30 s]
-    D --> E[Split into 10 x 3 s segments]
-    E --> F[Mel Spectrograms<br/>128 x 130]
-    F --> G[CNN]
-    G --> H[Per-segment predictions]
-    H --> I[Majority Vote]
-    I --> J[Predicted Genre]
+flowchart TD
+    A[Audio Upload] --> B[Audio Loading and Validation]
+    B --> C[Mono Conversion and Resampling]
+    C --> D[30-Second Standardization]
+    D --> E[Split into 10 Segments]
+    E --> F[Mel Spectrogram Extraction]
+    F --> G[CNN Classification]
+    G --> H[Segment-Level Predictions]
+    H --> I[Majority Voting]
+    I --> J[Final Genre Prediction]
     J --> K[Streamlit Dashboard]
 ```
 
----
-
 ## Dataset
 
-The project uses the [**GTZAN Music Genre Dataset**](https://www.kaggle.com/datasets/andradaolteanu/gtzan-dataset-music-genre-classification), a widely used benchmark for music genre classification.
+MusicMind AI uses the [GTZAN Music Genre Dataset](https://www.kaggle.com/datasets/andradaolteanu/gtzan-dataset-music-genre-classification), a widely used benchmark for music genre classification research.
+
+### Dataset Summary
 
 | Property | Value |
 |---|---:|
-| Original audio tracks | 1,000 |
-| Genres | 10 |
-| Cleaned audio tracks | 984 |
-| Sample rate | 22,050 Hz |
-| Track duration | 30 s |
-| Training / Validation / Test | 688 / 148 / 148 |
+| Original Audio Tracks | 1,000 |
+| Number of Genres | 10 |
+| Cleaned Audio Tracks | 984 |
+| Sample Rate | 22,050 Hz |
+| Standard Track Duration | 30 seconds |
+| Training Tracks | 688 |
+| Validation Tracks | 148 |
+| Test Tracks | 148 |
 
-### Data cleaning and splitting
+### Data Cleaning and Preparation
 
-- Corrupted audio files were excluded.
-- Identified duplicate tracks were removed.
-- Recordings were standardized to a consistent format.
-- Splits were made at the **original track level** with **stratified sampling**.
+The original dataset underwent a preprocessing and quality-control stage:
 
-> [!IMPORTANT]
-> **Splitting happens *before* segment generation.** This guarantees that segments from the same track never appear in different splits, which prevents data leakage and keeps the reported test score honest. This is a common pitfall in segment-based audio classification.
+- Excluded corrupted audio recordings.
+- Identified and removed duplicate tracks.
+- Standardized audio recordings to a consistent format.
+- Converted recordings to mono.
+- Resampled audio to 22,050 Hz.
+
+### Data Leakage Prevention
+
+An important design decision was splitting the dataset at the original track level before generating audio segments.
+
+This ensures that segments originating from the same recording cannot appear across different dataset splits.
+
+As a result, the model is evaluated on previously unseen recordings rather than segments from tracks it may have encountered during training.
+
+The dataset was divided using stratified sampling:
+
+- Training: 688 tracks
+- Validation: 148 tracks
+- Testing: 148 tracks
 
 ---
 
 ## Methodology
 
-<details open>
-<summary><b>1. Audio preprocessing</b></summary>
+### 1. Audio Preprocessing
 
-<br>
+Each recording passes through a standardized preprocessing pipeline:
 
-- Load and decode audio
-- Convert to mono
-- Resample to 22,050 Hz
-- Standardize to 30 seconds
-- Divide into 10 non-overlapping 3-second segments
+- Audio loading and decoding.
+- Stereo-to-mono conversion.
+- Resampling to 22,050 Hz.
+- Duration standardization to 30 seconds.
+- Division into 10 non-overlapping segments of 3 seconds each.
 
-</details>
+### 2. Mel Spectrogram Feature Extraction
 
-<details open>
-<summary><b>2. Mel Spectrogram extraction</b></summary>
+Each audio segment is transformed into a Mel Spectrogram, allowing the CNN to learn relevant time-frequency patterns.
 
-<br>
-
-| Parameter | Value |
+| Parameter | Configuration |
 |---|---:|
-| Sample rate | 22,050 Hz |
-| FFT size | 2,048 |
-| Hop length | 512 |
-| Mel bins | 128 |
-| Segment duration | 3 s |
-| Spectrogram shape | 128 × 130 |
+| Sample Rate | 22,050 Hz |
+| FFT Size | 2,048 |
+| Hop Length | 512 |
+| Mel Bins | 128 |
+| Segment Duration | 3 seconds |
+| Spectrogram Dimensions | 128 × 130 |
 
-Spectrograms are converted to decibels, clipped to a fixed range, and normalized before entering the CNN.
+The extracted spectrograms are converted to decibel representations, clipped to a fixed range, and normalized before being passed to the neural network.
 
-</details>
+### 3. CNN Model Training
 
-<details open>
-<summary><b>3. Model training</b></summary>
+A custom CNN architecture was developed to learn discriminative audio patterns.
 
-<br>
+The training pipeline incorporates:
 
-- Data augmentation to improve generalization
-- Batch normalization for stable training
-- Dropout for regularization
-- Validation-based model selection (best checkpoint kept)
+- Data augmentation to improve generalization.
+- Batch Normalization for more stable training.
+- Dropout for regularization.
+- Validation-based checkpoint selection.
 
-</details>
+### 4. Track-Level Inference
 
-<details open>
-<summary><b>4. Track-level prediction</b></summary>
+For each uploaded recording:
 
-<br>
-
-1. Preprocess the uploaded recording
-2. Extract 10 segments and compute a Mel Spectrogram for each
-3. Run every spectrogram through the CNN
-4. Collect the predicted genre per segment
-5. Apply **majority voting**: the genre with the most segment votes wins
-
-</details>
+1. The audio is validated and preprocessed.
+2. The recording is divided into 10 segments.
+3. A Mel Spectrogram is extracted for each segment.
+4. The CNN independently predicts the genre probabilities.
+5. Majority voting aggregates the segment-level predictions.
+6. The most frequently predicted genre becomes the final track-level classification.
 
 ---
 
 ## Model Architecture
 
+MusicMind uses a custom Convolutional Neural Network consisting of three convolutional blocks followed by feature aggregation and classification layers.
+
 | Layer | Configuration |
 |---|---|
-| Input | `128 × 130 × 1` |
-| Convolutional Block 1 | 32 filters |
-| Convolutional Block 2 | 64 filters |
-| Convolutional Block 3 | 128 filters |
-| Per-block components | Batch Normalization → ReLU → Max Pooling |
-| Feature aggregation | Global Average Pooling |
-| Dense | 128 units |
+| Input | 128 × 130 × 1 |
+| Convolutional Block 1 | 32 Filters |
+| Convolutional Block 2 | 64 Filters |
+| Convolutional Block 3 | 128 Filters |
+| Block Components | Batch Normalization, ReLU, Max Pooling |
+| Feature Aggregation | Global Average Pooling |
+| Dense Layer | 128 Units |
 | Regularization | Dropout (0.5) |
-| Output | 10 classes, Softmax |
+| Output Layer | 10 Classes, Softmax |
 
-**Input:** `(128, 130, 1)`  **Output:** `(10,)`
+**Input Shape:** `(128, 130, 1)`
 
-The selected model is stored at `artifacts/models/musicmind_cnn_augmented_best.keras`.
+**Output Shape:** `(10,)`
+
+The trained model is saved in Keras format:
+
+`artifacts/models/musicmind_cnn_augmented_best.keras`
 
 ---
 
-## Results
+## Model Performance
 
-Evaluated on an **untouched held-out test set of 148 tracks**.
+The model was evaluated on an untouched held-out test set containing 148 original audio tracks.
 
-### Overall performance
+### Overall Evaluation Metrics
 
 | Metric | Score |
 |---|---:|
-| **Test Accuracy** | **82.43%** |
+| Test Accuracy | **82.43%** |
 | Balanced Accuracy | 82.43% |
 | Macro F1-Score | 81.49% |
 | Weighted F1-Score | 81.48% |
 
-### Per-class performance
+### Per-Class Classification Performance
 
 | Genre | Precision | Recall | F1-Score |
 |---|---:|---:|---:|
@@ -208,13 +224,44 @@ Evaluated on an **untouched held-out test set of 148 tracks**.
 | Disco | 0.65 | 0.87 | 0.74 |
 | Rock | 0.71 | 0.33 | 0.45 |
 
-### Takeaways
+### Performance Analysis
 
-- **Strongest:** Blues and Classical, with perfect recall, which reflects their distinctive timbral and harmonic character.
-- **Weakest:** Rock (recall 0.33), the clear outlier. Rock overlaps acoustically with several neighboring genres.
-- Full artifacts for deeper error analysis are in [`artifacts/reports/`](artifacts/reports), including the confusion matrix and per-track predictions.
+**Best Performing Classes**
 
-> *Metrics are computed on GTZAN's held-out test split. Results may differ on other datasets or real-world recordings.*
+- Blues achieved an F1-score of 0.97.
+- Classical achieved an F1-score of 0.94.
+- Both classes achieved 1.00 recall on the held-out test set.
+
+**Main Area for Improvement**
+
+Rock achieved the lowest recall at 0.33, indicating difficulty distinguishing it from acoustically similar genres.
+
+This highlights the challenges of music genre classification, particularly when different genres share similar instrumentation, rhythm, and spectral characteristics.
+
+Detailed evaluation artifacts, including confusion matrices and track-level predictions, are available in `artifacts/reports/`.
+
+*All reported metrics are based on the GTZAN held-out test split. Performance on other datasets and real-world recordings may vary.*
+
+---
+
+## Interactive Web Application
+
+MusicMind AI is deployed as an interactive Streamlit application.
+
+### Application Features
+
+- Audio file upload and validation.
+- Support for WAV, MP3, OGG, FLAC, and M4A formats, subject to decoder availability.
+- Audio playback.
+- Final track-level genre prediction.
+- Segment-level prediction analysis.
+- Segment agreement visualization.
+- Average genre probability distribution.
+- Per-segment probability timeline.
+- Ranked genre predictions.
+- Model information and evaluation metrics.
+
+**Live Application:** https://musicmind-ai.streamlit.app/
 
 ---
 
@@ -222,90 +269,149 @@ Evaluated on an **untouched held-out test set of 148 tracks**.
 
 ```text
 MusicMind-AI/
-├── app.py                          # Streamlit entry point
+│
+├── app.py
 ├── requirements.txt
-├── .streamlit/config.toml          # Theme & server config
-├── tests/test_pipeline.py          # Pipeline tests
+├── .streamlit/
+│   └── config.toml
 │
 ├── artifacts/
-│   ├── metadata/model_config.json
-│   ├── models/musicmind_cnn_augmented_best.keras
-│   └── reports/                    # Split manifest, predictions, confusion matrix, eval JSON
+│   ├── metadata/
+│   │   └── model_config.json
+│   ├── models/
+│   │   └── musicmind_cnn_augmented_best.keras
+│   └── reports/
+│       ├── split manifests
+│       ├── predictions
+│       ├── confusion matrix
+│       └── evaluation reports
 │
 ├── notebooks/
-│   └── music_genre_classification.ipynb   # EDA, training & evaluation
+│   └── music_genre_classification.ipynb
 │
-└── src/musicmind/
-    ├── audio/                      # loader · preprocessing · validation
-    ├── models/inference.py         # Segment inference + majority voting
-    ├── reports.py
-    └── ui/                         # charts · components · constants · sections · theme
+├── src/
+│   └── musicmind/
+│       ├── audio/
+│       ├── models/
+│       │   └── inference.py
+│       ├── reports.py
+│       └── ui/
+│
+├── tests/
+│   └── test_pipeline.py
+│
+└── README.md
 ```
 
 ---
 
 ## Quick Start
 
-**Prerequisites:** Python 3.11 and Git.
+### Prerequisites
+
+- Python 3.11
+- Git
+
+### Installation
+
+**1. Clone the repository**
 
 ```bash
-# 1. Clone
 git clone https://github.com/AbdelrhmanAkl/MusicMind-AI.git
 cd MusicMind-AI
+```
 
-# 2. Create a virtual environment
+**2. Create a virtual environment**
+
+```bash
 python -m venv .venv
+```
 
-# 3. Activate it
-# Windows (PowerShell):
+**3. Activate the environment**
+
+Windows PowerShell:
+
+```powershell
 .venv\Scripts\Activate.ps1
-# macOS / Linux:
-source .venv/bin/activate
+```
 
-# 4. Install dependencies
+macOS / Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+**4. Install dependencies**
+
+```bash
 python -m pip install --upgrade pip
 pip install -r requirements.txt
+```
 
-# 5. Run the app
+**5. Launch the application**
+
+```bash
 python -m streamlit run app.py
 ```
 
-Then open **http://localhost:8501**, upload an audio file, and explore the prediction.
+Open the following address in your browser:
+
+`http://localhost:8501`
+
+Upload an audio recording to start exploring the model's predictions.
 
 ---
 
-## Limitations
+## Limitations and Future Improvements
 
-- Trained and evaluated on **GTZAN only**; generalization to other music sources is not guaranteed.
-- Genres overlap acoustically, so some confusion is expected.
-- **Rock** has the lowest recall (0.33) on the held-out test set.
+### Current Limitations
+
+- Training and evaluation are based exclusively on the GTZAN dataset.
+- Generalization to different music datasets and recording environments is not guaranteed.
+- Genre overlap can lead to classification errors.
+- Rock has relatively low recall on the current test split.
 - Audio quality, recording conditions, and blended genres can affect predictions.
-- Majority voting yields a track-level answer but does not mean every segment belongs to that genre. Use the segment timeline to see the disagreement.
+- Majority voting produces one track-level result but does not imply that every segment belongs to the predicted genre.
+
+### Potential Improvements
+
+- Evaluate the model on additional music genre datasets.
+- Experiment with alternative CNN architectures and transfer learning.
+- Explore attention-based audio classification models.
+- Improve performance on acoustically overlapping genres.
+- Investigate more advanced segment aggregation strategies.
 
 ---
 
-## Tech Stack
+## Technology Stack
 
-| Category | Tools |
+| Category | Technologies |
 |---|---|
-| Language | Python |
+| Programming Language | Python 3.11 |
 | Deep Learning | TensorFlow, Keras |
 | Audio Processing | Librosa, SoundFile |
-| Data & ML | NumPy, Pandas, Scikit-learn |
+| Data Processing | NumPy, Pandas |
+| Machine Learning | Scikit-learn |
 | Visualization | Plotly |
-| Web App | Streamlit |
-| Workflow | Jupyter Notebook, Git, GitHub |
+| Web Application | Streamlit |
+| Development | Jupyter Notebook, Git, GitHub |
 
 ---
 
 ## Author
 
-**Abdelrahman Akl** — AI & Machine Learning Engineer
+**Abdelrahman Akl**  
+AI & Machine Learning Engineer
 
-[GitHub](https://github.com/AbdelrhmanAkl) · [LinkedIn](https://www.linkedin.com/in/abdelrahmanakl/)
+- **GitHub:** [AbdelrahmanAkl](https://github.com/AbdelrhmanAkl)
+- **LinkedIn:** [Abdelrahman Akl](https://www.linkedin.com/in/abdelrahmanakl/)
 
-<div align="center">
+---
 
-*If you found this project useful, consider giving it a star.*
+## License
 
-</div>
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+*MusicMind AI — From audio signals to intelligent music classification.*

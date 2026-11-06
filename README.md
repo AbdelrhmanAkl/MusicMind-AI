@@ -2,17 +2,15 @@
 
 # MusicMind AI
 
-### Deep Learning-Based Music Genre Classification
+**Deep Learning-Based Music Genre Classification**
 
 *Upload a track. Get its genre, with the evidence behind the prediction.*
 
-[**Live Demo**](https://musicmind-ai.streamlit.app/) · [**Notebook**](notebooks/music_genre_classification.ipynb) · [**Results**](#results) · [**Quick Start**](#quick-start)
+[Live Demo](https://musicmind-ai.streamlit.app/) · [Notebook](notebooks/music_genre_classification.ipynb) · [Results](#results) · [Quick Start](#quick-start)
 
-Python 3.11 · TensorFlow 2.21 · Streamlit · MIT License
+`Python 3.11` `TensorFlow 2.21` `Streamlit` `MIT License`
 
 </div>
-
----
 
 ## Overview
 

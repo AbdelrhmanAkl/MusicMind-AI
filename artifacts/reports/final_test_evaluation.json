@@ -1,0 +1,233 @@
+{
+    "project": "MusicMind AI",
+    "dataset": "GTZAN",
+    "selected_model": "Augmented CNN",
+    "architecture": "3-block CNN with BatchNormalization",
+    "input_shape": [
+        128,
+        130,
+        1
+    ],
+    "sample_rate": 22050,
+    "segment_duration_seconds": 3,
+    "segments_per_track": 10,
+    "augmentation": "SpecAugment",
+    "aggregation_method": "Majority Voting",
+    "test_tracks": 148,
+    "correct_predictions": 122,
+    "incorrect_predictions": 26,
+    "accuracy": 0.8243243243243243,
+    "balanced_accuracy": 0.8242857142857144,
+    "macro_f1": 0.8148813417765031,
+    "weighted_f1": 0.8147705906778487,
+    "classification_report": {
+        "blues": {
+            "precision": 0.9375,
+            "recall": 1.0,
+            "f1-score": 0.967741935483871,
+            "support": 15.0
+        },
+        "classical": {
+            "precision": 0.8823529411764706,
+            "recall": 1.0,
+            "f1-score": 0.9375,
+            "support": 15.0
+        },
+        "country": {
+            "precision": 0.8125,
+            "recall": 0.8666666666666667,
+            "f1-score": 0.8387096774193549,
+            "support": 15.0
+        },
+        "disco": {
+            "precision": 0.65,
+            "recall": 0.8666666666666667,
+            "f1-score": 0.7428571428571429,
+            "support": 15.0
+        },
+        "hiphop": {
+            "precision": 0.7777777777777778,
+            "recall": 0.9333333333333333,
+            "f1-score": 0.8484848484848485,
+            "support": 15.0
+        },
+        "jazz": {
+            "precision": 0.8666666666666667,
+            "recall": 0.8666666666666667,
+            "f1-score": 0.8666666666666667,
+            "support": 15.0
+        },
+        "metal": {
+            "precision": 0.9166666666666666,
+            "recall": 0.7857142857142857,
+            "f1-score": 0.8461538461538461,
+            "support": 14.0
+        },
+        "pop": {
+            "precision": 0.75,
+            "recall": 0.8571428571428571,
+            "f1-score": 0.8,
+            "support": 14.0
+        },
+        "reggae": {
+            "precision": 1.0,
+            "recall": 0.7333333333333333,
+            "f1-score": 0.8461538461538461,
+            "support": 15.0
+        },
+        "rock": {
+            "precision": 0.7142857142857143,
+            "recall": 0.3333333333333333,
+            "f1-score": 0.45454545454545453,
+            "support": 15.0
+        },
+        "accuracy": 0.8243243243243243,
+        "macro avg": {
+            "precision": 0.8307749766573295,
+            "recall": 0.8242857142857144,
+            "f1-score": 0.8148813417765031,
+            "support": 148.0
+        },
+        "weighted avg": {
+            "precision": 0.830740404269816,
+            "recall": 0.8243243243243243,
+            "f1-score": 0.8147705906778487,
+            "support": 148.0
+        }
+    },
+    "confusion_matrix": [
+        [
+            15,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        [
+            0,
+            15,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        [
+            0,
+            0,
+            13,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1
+        ],
+        [
+            0,
+            1,
+            0,
+            13,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        [
+            0,
+            0,
+            0,
+            0,
+            14,
+            0,
+            0,
+            1,
+            0,
+            0
+        ],
+        [
+            0,
+            1,
+            0,
+            0,
+            0,
+            13,
+            0,
+            1,
+            0,
+            0
+        ],
+        [
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            11,
+            0,
+            0,
+            1
+        ],
+        [
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            12,
+            0,
+            0
+        ],
+        [
+            0,
+            0,
+            1,
+            2,
+            1,
+            0,
+            0,
+            0,
+            11,
+            0
+        ],
+        [
+            1,
+            0,
+            2,
+            4,
+            0,
+            0,
+            1,
+            2,
+            0,
+            5
+        ]
+    ],
+    "class_labels": [
+        "blues",
+        "classical",
+        "country",
+        "disco",
+        "hiphop",
+        "jazz",
+        "metal",
+        "pop",
+        "reggae",
+        "rock"
+    ],
+    "test_set_used": true
+}

@@ -1,0 +1,26 @@
+﻿{
+    "project": "MusicMind AI",
+    "model_name": "Augmented CNN",
+    "model_file": "musicmind_cnn_augmented_best.keras",
+    "sample_rate": 22050,
+    "segment_duration_seconds": 3,
+    "segments_per_track": 10,
+    "n_fft": 2048,
+    "hop_length": 512,
+    "n_mels": 128,
+    "input_shape": [128, 130, 1],
+    "num_classes": 10,
+    "aggregation_method": "majority_voting",
+    "classes": [
+        "blues",
+        "classical",
+        "country",
+        "disco",
+        "hiphop",
+        "jazz",
+        "metal",
+        "pop",
+        "reggae",
+        "rock"
+    ]
+}

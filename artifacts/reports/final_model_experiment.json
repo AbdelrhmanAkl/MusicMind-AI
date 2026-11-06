@@ -1,0 +1,27 @@
+{
+    "project": "MusicMind AI",
+    "dataset": "GTZAN",
+    "selected_model": "Augmented CNN",
+    "architecture": "3-block CNN with BatchNormalization",
+    "input_shape": [
+        128,
+        130,
+        1
+    ],
+    "sample_rate": 22050,
+    "segment_duration_seconds": 3,
+    "segments_per_track": 10,
+    "augmentation": "SpecAugment",
+    "optimizer": "Adam",
+    "learning_rate_initial": 0.0005,
+    "dropout": 0.5,
+    "aggregation_method": "Majority Voting",
+    "validation_accuracy_mean_probability": 0.8176,
+    "validation_accuracy_majority_voting": 0.8243,
+    "validation_accuracy_temperature_scaling": 0.8176,
+    "validation_balanced_accuracy_mean_probability": 0.819,
+    "validation_tracks": 148,
+    "test_set_used": false,
+    "checkpoint": "/content/datasets/models/musicmind_cnn_augmented_best.keras",
+    "experiment_date": "2026-11-01"
+}

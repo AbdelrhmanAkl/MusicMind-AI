@@ -1,0 +1,58 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.pyd
+.Python
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# IDE and operating system
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Testing and cache
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+
+# Dataset files
+data/raw/
+data/external/
+data/processed/
+
+# Generated outputs
+outputs/predictions/
+outputs/visualizations/
+
+# Temporary files
+*.tmp
+*.bak
+
+# Exclude processed dataset
+data/processed/
+
+# Temporary audio test files
+outputs/*.wav
+outputs/*.mp3
+outputs/*.ogg
+outputs/*.flac
+outputs/*.m4a
